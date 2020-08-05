@@ -3,34 +3,53 @@ import React from 'react';
 import './styles.css';
 
 import whatsappIcon from '../../images/icons/whatsapp.svg';
+import api from '../../services/api';
 
-export default function TeacherItem() {
+interface TeacherItemProps {
+    teacher: {
+        id: number;
+        subject: string;
+        cost: number;
+        user_id: number;
+        name: string;
+        avatar: string;
+        whatsapp: string;
+        bio: string;
+    };
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher: { user_id, avatar, name, subject, bio, cost, whatsapp } }) => {
+
+    function createNewConnection() {
+        api.post('/connection', {
+            user_id
+        });
+    }
+
     return (
         <main>
             <article className="teacher-item">
                 <header>
-                    <img src="https://pbs.twimg.com/profile_images/1155077242936053760/hfkFd7AL_400x400.jpg" alt="William Candillon" />
+                    <img src={avatar} alt="William Candillon" />
                     <div>
-                        <strong>William Candillon</strong>
-                        <span>React Native</span>
+                        <strong>{name}</strong>
+                        <span>{subject}</span>
                     </div>
                 </header>
-                <p>
-                    Maker of the “Can it be done in React Native?” YouTube series http://youtube.com/wcandillon
-                <br /><br />
-                    Zürich | Ingressou em abril de 2008
-            </p>
+                <p>{bio}</p>
                 <footer>
                     <p>
                         Preço/hora
-                    <strong>R$ 80,00</strong>
+                    <strong>R$ {cost.toFixed(2)}</strong>
                     </p>
-                    <button type="button">
+                    <a onClick={createNewConnection} href={`https://wa.me/${whatsapp}`} target="_blank">
                         <img src={whatsappIcon} alt="Whatsapp" />
                         Entrar em contato
-                </button>
+                    </a>
                 </footer>
             </article>
         </main>
     )
 }
+
+export default TeacherItem;
